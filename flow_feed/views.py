@@ -1,16 +1,17 @@
-# created by Vikas
+# created by vikas
 # Notify Sequoia hack 2016
 # future imports
 from __future__ import unicode_literals
 
 # standard imports
+import json
 
 # django imports
-import json
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 
 # local imports
-from flow_feed.models import Posts
+from flow_feed.models import Posts, Votes
 from flow_feed.utilities.utils import get_posts_by_upvotes, get_posts_by_location, get_posts_by_profile, save_img, \
     get_address
 
@@ -45,8 +46,19 @@ def frontend_api(request):
 def add_post(request):
     if request.POST:
         img_object = request.FILES
-        img_save, img_url = save_img(img_object)
-        if not img_save:
+        a = {}
+        file = img_object.getlist("image")
+        # print file
+        for i in file:
+            a["name"] = i.name
+            a["data"] = i.chunks()
+        uploaded_img = open("/uploads/sample"+a["name"]+".jpg", "wb+")
+        for chunk in a["data"]:
+            # filename = "sample"+request.FILES['file_img'].name+".jpg"
+            uploaded_img.write(chunk)
+
+        img_url = save_img("/uploads/sample"+a["name"]+".jpg")
+        if not img_url:
             return HttpResponse(
                 json.dumps({"error": "error uploading image"}),
                 content_type="application/json"
@@ -65,25 +77,24 @@ def add_post(request):
                 )
             address = get_address(latitude, longitude)
             post_obj, created = Posts.objects.get_or_create(
-                image_url = img_url,
-                description = description,
-                latitude = latitude,
-                longitude = longitude,
-                tags = tags,
-                address = address
+                image_url=img_url,
+                description=description,
+                latitude=latitude,
+                longitude=longitude,
+                tags=tags,
+                address=address
             )
             if created:
                 # twitter_call
                 return HttpResponse(
-                    json.dumps({"msg":"success"}),
+                    json.dumps({"msg": "success"}),
                     content_type="application/json"
                 )
             else:
                 return HttpResponse(
-                    json.dumps({"msg":"request already registered"}),
+                    json.dumps({"msg": "request already registered"}),
                     content_type="application/json"
                 )
-
 
 
 def upvote_post(request):
@@ -97,21 +108,33 @@ def upvote_post(request):
                 content_type="application/json"
             )
         try:
-            post_obj = Posts.objects.get(id = int(post_id))
+            post_obj = Posts.objects.get(id=int(post_id))
         except:
             return HttpResponse(
                 json.dumps({"error": "post doesn't exists"}),
                 content_type="application/json"
             )
-        post_obj
-
-
-
-
-
-
-
-
-
-
-
+        try:
+            user_obj = User.objects.get(id=int(user_id))
+        except:
+            return HttpResponse(
+                json.dumps({"error": "user doesn't exists"}),
+                content_type="application/json"
+            )
+        already_liked = post_obj.upvote.filter(
+            liked_by__id=user_obj.id
+        )
+        if not already_liked:
+            like_obj, created = Votes.objects.create()
+            like_obj.liked_by = user_obj
+            like_obj.save()
+            post_obj.upvote.add(like_obj)
+            return HttpResponse(
+                json.dumps({"msg": "Success"}),
+                content_type="application/json"
+            )
+        else:
+            return HttpResponse(
+                json.dumps({"msg": "already liked"}),
+                content_type="application/json"
+            )
