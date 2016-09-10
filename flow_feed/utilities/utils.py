@@ -40,7 +40,7 @@ def get_posts_by_upvotes():
 
 def get_posts_by_location(latitude, longitude):
     posts = []
-    min_lat, max_lat, min_long, max_long = min_max_lat_long(latitude, longitude)
+    min_lat, max_lat, min_long, max_long = min_max_lat_long(latitude, longitude, 5)
     post = Posts.objects.filter(
         latitude__gte=min_lat,
         longitude__gte=min_long,
@@ -62,7 +62,6 @@ def get_posts_by_location(latitude, longitude):
 def get_address(latitude, longitude):
     url = google_api_address + "geocode/json?latlng=" + str(latitude)+","+str(longitude) + "&sensor=true"
     data = json.loads(urllib.urlopen(url).read())
-    neighborhood = None
     try:
         address = str(data['results'][0]['formatted_address'])
         # address = str(data['results'][1]['formatted_address']).split(",")
