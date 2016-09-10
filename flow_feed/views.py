@@ -23,32 +23,27 @@ from flow_feed.utilities.utils import get_posts_by_upvotes, get_posts_by_locatio
 
 # Method to show all popular posts, around posts and profile
 def frontend_api(request):
-    if request.POST:
-        response_data = []
-        latitude = request.POST.get("latitude", None)
-        longitude = request.POST.get("longitude", None)
-        user_id = request.POST.get("user_id", None)
-        if latitude and longitude:
-            posts_around_you = get_posts_by_location(latitude, longitude)
-            obj = {"posts_around_you": posts_around_you}
-            response_data.append(obj)
-        elif user_id:
-            profile_posts = get_posts_by_profile(request.user)
-            obj = {"profile_posts": profile_posts}
-            response_data.append(obj)
-        else:
-            posts_by_upvotes = get_posts_by_upvotes()
-            obj = {"all_posts": posts_by_upvotes}
-            response_data.append(obj)
-        return HttpResponse(
-            json.dumps({"response": response_data}),
-            content_type="application/json"
-        )
+    params = request.body
+    args = json.loads(params)
+
+    response_data = []
+    latitude = args.get("latitude", None)
+    longitude = args.get("longitude", None)
+    user_id = args.get("user_id", None)
+    if latitude and longitude:
+        posts_around_you = get_posts_by_location(latitude, longitude)
+        obj = {"posts_around_you": posts_around_you}
+    elif user_id:
+        profile_posts = get_posts_by_profile(user_id)
+        obj = {"profile_posts": profile_posts}
     else:
-        return HttpResponse(
-            json.dumps({"response": "bad request"}),
-            content_type="application/json"
-        )
+        posts_by_upvotes = get_posts_by_upvotes()
+        obj = {"posts": posts_by_upvotes}
+    return HttpResponse(
+        json.dumps(obj),
+        content_type="application/json"
+    )
+
 
 
 def add_post(request):

@@ -38,7 +38,7 @@ class Posts(models.Model):
 
     @property
     def up_vote_counts(self):
-        return self.up_vote.count()
+        return self.up_vote.all().count()
 
     def __str__(self):
         return self.description

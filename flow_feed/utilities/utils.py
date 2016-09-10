@@ -24,18 +24,17 @@ CLOUDINARY_SECRET_KEY = "JCXpREDEqTzBbvM6rn0BH-1Chio"
 
 def get_posts_by_upvotes():
     data = []
-    all_posts = Posts.objects.all().order_by("-up_vote_counts")
+    all_posts = Posts.objects.all()
     for post in all_posts:
         post_obj = {
-            "image_url": post.image_url,
+            "image_url": post.image_url or "",
             "description": post.description,
             "location": post.address,
             "post_id": post.id,
-            "like_count": post.upvote_counts
+            "like_count": post.up_vote_counts
         }
         data.append(post_obj)
-    posts = {"posts": data}
-    return posts
+    return data
 
 
 def get_posts_by_location(latitude, longitude):
@@ -49,11 +48,11 @@ def get_posts_by_location(latitude, longitude):
     )[:10]
     for each_post in post:
         post_obj = {
-            "image_url": each_post.image_url,
+            "image_url": each_post.image_url or "",
             "description": each_post.description,
             "location": each_post.address,
             "post_id": each_post.id,
-            "like_count": each_post.upvote_counts
+            "like_count": each_post.up_vote_counts
         }
         posts.append(post_obj)
     return posts
@@ -89,11 +88,11 @@ def get_posts_by_profile(user):
     )
     for post in all_user_posts:
         post_obj = {
-            "image_url": post.image_url,
+            "image_url": post.image_url or "",
             "description": post.description,
             "location": post.address,
             "post_id": post.id,
-            "like_count": post.upvote_counts
+            "like_count": post.up_vote_counts
         }
         posts.append(post_obj)
     return posts
