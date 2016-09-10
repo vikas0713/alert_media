@@ -19,17 +19,18 @@ from flow_feed.utilities.utils import get_posts_by_upvotes, get_posts_by_locatio
 def frontend_api(request):
     if request.POST:
         response_data = []
-        latitude = request.POST.get("latitude",None)
-        longitude = request.POST.get("longitude",None)
-        user_id = request.POST.get("user_id",None)
-        posts_by_upvotes = get_posts_by_upvotes()
-        response_data.append(posts_by_upvotes)
+        latitude = request.POST.get("latitude", None)
+        longitude = request.POST.get("longitude", None)
+        user_id = request.POST.get("user_id", None)
         if latitude and longitude:
             posts_around_you = get_posts_by_location(latitude, longitude)
             response_data.append(posts_around_you)
         elif user_id:
             profile_posts = get_posts_by_profile(request.user)
             response_data.append(profile_posts)
+        else:
+            posts_by_upvotes = get_posts_by_upvotes()
+            response_data.append(posts_by_upvotes)
         return HttpResponse(
             json.dumps({"response": response_data}),
             content_type="application/json"
