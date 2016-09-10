@@ -1,0 +1,17 @@
+*.pyc
+.DS_Store
+**/.pydevproject
+.pydevproject
+env/
+mltsite/static/webapps/platforms/
+#mltsite/static/webapps/plugins/
+mltsite/site_media
+sltapp/.project
+sltapp/platforms
+sltapp/.tmp
+sltapp/plugins
+sltapp/node_modules
+sltapp/app/lib
+sltapp/www
+sltapp/.envrc
+sltapp/npm-debug.log
