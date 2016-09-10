@@ -34,7 +34,7 @@ class Posts(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True)
     tags = models.CharField(max_length=255, choices=TAG)
     user = models.ForeignKey(User, blank=True)
-    up_vote = models.ManyToManyField(Votes)
+    up_vote = models.ManyToManyField(Votes, blank=True)
 
     @property
     def up_vote_counts(self):

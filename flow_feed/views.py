@@ -34,6 +34,11 @@ def frontend_api(request):
             json.dumps({"response": response_data}),
             content_type="application/json"
         )
+    else:
+        return HttpResponse(
+            json.dumps({"response": "bad request"}),
+            content_type="application/json"
+        )
 
 
 def add_post(request):
