@@ -35,10 +35,10 @@ def frontend_api(request):
     user_id = args.get("user_id", None)
     if latitude and longitude:
         posts_around_you = get_posts_by_location(latitude, longitude)
-        obj = {"posts_around_you": posts_around_you}
+        obj = {"posts": posts_around_you}
     elif user_id:
         profile_posts = get_posts_by_profile(user_id)
-        obj = {"profile_posts": profile_posts}
+        obj = {"posts": profile_posts}
     else:
         posts_by_upvotes = get_posts_by_upvotes()
         obj = {"posts": posts_by_upvotes}
