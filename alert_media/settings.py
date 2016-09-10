@@ -29,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Custom User model
+AUTH_USER_MODEL = 'users.Profile'
 
 # Application definition
 
@@ -41,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # custom apps
-    'flow_feed'
+    'flow_feed',
+    'users',
 ]
 
 MIDDLEWARE_CLASSES = [

@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from flow_feed.views import frontend_api, upload_post_image, upvote_post, add_post
+from flow_feed.views import frontend_api, upload_post_image, upvote_post, add_post, login
 
 urlpatterns = [
     url(r'^$', frontend_api),
     url(r'^upload/$', upload_post_image),
     url(r'^upvote/$', upvote_post),
-    url(r'^add/$', add_post)
+    url(r'^add/$', add_post),
+    url(r'^login/$', login),
 ]

@@ -22,6 +22,9 @@ from flow_feed.utilities.utils import get_posts_by_upvotes, get_posts_by_locatio
 
 
 # Method to show all popular posts, around posts and profile
+from users.models import Profile
+
+
 def frontend_api(request):
     params = request.body
     args = json.loads(params)
@@ -146,9 +149,9 @@ def upvote_post(request):
         )
 
 
-def upload_post_image(self, request, device_type):
+def upload_post_image(request):
     try:
-        session_id = request.POST["session_id"]
+        # session_id = request.POST["session_id"]
         # upload avatar image
         post_image = request.FILES.getlist("post_image", None)
         avatar_file_name = smart_text((post_image[0].name).replace(" ", "_"))
@@ -188,3 +191,18 @@ def upload_post_image(self, request, device_type):
             json.dumps({"error": "error in saving images"}),
             content_type="application/json"
         )
+
+
+def login(request):
+    phone_no = request.POST.get("phone_no", None)
+    if phone_no:
+        obj, created = Profile.objects.get_or_create(
+            contact= str(phone_no),
+            username= str(phone_no)
+        )
+        return HttpResponse(
+            json.dumps({"user_id": obj.id, "contact_num": phone_no})
+        )
+
+
+

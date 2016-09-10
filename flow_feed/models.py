@@ -6,14 +6,14 @@ from __future__ import unicode_literals
 # standard imports
 
 # django imports
-from django.contrib.auth.models import User
 from django.db import models
 
 # local imports
+from users.models import Profile
 
 
 class Votes(models.Model):
-    liked_by = models.ForeignKey(User)
+    liked_by = models.ForeignKey(Profile)
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -33,7 +33,7 @@ class Posts(models.Model):
     longitude = models.CharField(max_length=255, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     tags = models.CharField(max_length=255, choices=TAG)
-    user = models.ForeignKey(User, blank=True)
+    user = models.ForeignKey(Profile, blank=True)
     up_vote = models.ManyToManyField(Votes, blank=True)
 
     @property
