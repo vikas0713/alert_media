@@ -77,7 +77,7 @@ def add_post(request):
                     json.dumps({"msg":"request already registered"}),
                     content_type="application/json"
                 )
-            
+
 
 
 def upvote_post(request):
