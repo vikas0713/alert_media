@@ -9,7 +9,13 @@ from __future__ import unicode_literals
 
 
 # local imports
+import json
+import time
+import urllib
+import math
 from flow_feed.models import Posts
+
+google_api_address = "http://maps.googleapis.com/maps/api/"
 
 
 def get_posts_by_upvotes():
@@ -17,22 +23,60 @@ def get_posts_by_upvotes():
     all_posts = Posts.objects.all().order_by("-up_vote_counts")
     for post in all_posts:
         post_obj = {
-            "img_url": post.image_url,
+            "image_url": post.image_url,
             "description": post.description,
-            "like_counts": post.up_vote_counts,
-            "address": post.address,
+            "location": post.address,
+            "post_id": post.id,
+            "like_count": post.upvote_counts
         }
         data.append(post_obj)
-    post = {"posts": data }
-    pass
+    posts = {"posts": data }
+    return posts
 
 
 def get_posts_by_location(latitude, longitude):
-    pass
+    posts = []
+    min_lat, max_lat, min_long, max_long = min_max_lat_long(latitude, longitude)
+    post = Posts.objects.filter(
+        latitude__gte=min_lat,
+        longitude__gte=min_long,
+        latitude__lte=max_lat,
+        longitude__lte=max_long
+    )[:10]
+    for each_post in post:
+        post_obj = {
+            "image_url": each_post.image_url,
+            "description": each_post.description,
+            "location": each_post.address,
+            "post_id": each_post.id,
+            "like_count": each_post.upvote_counts
+        }
+        posts.append(post_obj)
+    return posts
 
 
 def get_address(latitude, longitude):
-    pass
+    url = google_api_address + "geocode/json?latlng=" + str(latitude)+","+str(longitude) + "&sensor=true"
+    data = json.loads(urllib.urlopen(url).read())
+    neighborhood = None
+    try:
+        address = str(data['results'][0]['formatted_address'])
+        # address = str(data['results'][1]['formatted_address']).split(",")
+    except:
+        time.sleep(5)
+        return get_address(latitude, longitude)
+    else:
+        return address
+
+
+# area around current lat lng
+def min_max_lat_long(lat, lng, distance):
+    min_lat = float(lat) - (0.009 * distance)
+    max_lat = float(lat) + (0.009 * distance)
+    min_long = round((float(lng) - ((0.009 * distance) / math.cos(float(lat) * math.pi / 180))), 5)
+    max_long = round((float(lng) + ((0.009 * distance) / math.cos(float(lat) * math.pi / 180))), 5)
+    print min_lat, max_lat, min_long, max_long
+    return str(min_lat), str(max_lat), str(min_long), str(max_long)
 
 
 def get_posts_by_profile(user):
