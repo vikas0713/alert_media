@@ -4,18 +4,22 @@
 from __future__ import unicode_literals
 
 # standard imports
-
-# django imports
-
-
-# local imports
 import json
 import time
 import urllib
 import math
+import cloudinary as cloudinary
+from cloudinary import uploader
+# django imports
+
+
+# local imports
 from flow_feed.models import Posts
 
 google_api_address = "http://maps.googleapis.com/maps/api/"
+CLOUDINARY_CLOUD_NAME = "joyage"
+CLOUDINARY_ACCESS_KEY = "819733926495133"
+CLOUDINARY_SECRET_KEY = "JCXpREDEqTzBbvM6rn0BH-1Chio"
 
 
 def get_posts_by_upvotes():
@@ -30,7 +34,7 @@ def get_posts_by_upvotes():
             "like_count": post.upvote_counts
         }
         data.append(post_obj)
-    posts = {"posts": data }
+    posts = {"posts": data}
     return posts
 
 
@@ -80,8 +84,32 @@ def min_max_lat_long(lat, lng, distance):
 
 
 def get_posts_by_profile(user):
-    pass
+    posts = []
+    all_user_posts = Posts.objects.filter(
+        user=user
+    )
+    for post in all_user_posts:
+        post_obj = {
+            "image_url": post.image_url,
+            "description": post.description,
+            "location": post.address,
+            "post_id": post.id,
+            "like_count": post.upvote_counts
+        }
+        posts.append(post_obj)
+    return posts
 
 
 def save_img(requested_file):
-    pass
+    cloudinary.config(
+        cloud_name=CLOUDINARY_CLOUD_NAME,
+        api_key=CLOUDINARY_ACCESS_KEY,
+        api_secret=CLOUDINARY_SECRET_KEY
+    )
+    response_data = uploader.upload(requested_file)
+    return response_data
+
+
+def profile_picture_upload(filename):
+
+    return response_data["url"]
