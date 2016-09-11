@@ -27,7 +27,8 @@ from users.models import Profile
 
 def frontend_api(request):
     params = request.body
-    args = json.loads(params)
+    try:
+        args = json.loads(params)
 
     latitude = args.get("latitude", None)
     longitude = args.get("longitude", None)
@@ -97,52 +98,41 @@ def add_post(request):
 
 
 def upvote_post(request):
-    if request.POST:
-        try:
-            post_id = request.POST["post_id"]
-            user_id = request.POST["user_id"]
-        except:
-            return HttpResponse(
-                json.dumps({"error": "parameters not correct"}),
-                content_type="application/json"
-            )
-        try:
-            post_obj = Posts.objects.get(id=int(post_id))
-        except:
-            return HttpResponse(
-                json.dumps({"error": "post doesn't exists"}),
-                content_type="application/json"
-            )
-        try:
-            user_obj = User.objects.get(id=int(user_id))
-        except:
-            return HttpResponse(
-                json.dumps({"error": "user doesn't exists"}),
-                content_type="application/json"
-            )
-        already_liked = post_obj.upvote.filter(
-            liked_by__id=user_obj.id
-        )
-        if not already_liked:
-            like_obj, created = Votes.objects.create()
-            like_obj.liked_by = user_obj
-            like_obj.save()
-            post_obj.upvote.add(like_obj)
-            return HttpResponse(
-                json.dumps({"msg": "Success"}),
-                content_type="application/json"
-            )
-        else:
-            return HttpResponse(
-                json.dumps({"msg": "already liked"}),
-                content_type="application/json"
-            )
-    else:
+    params = request.body
+    args = json.dumps(params)
+    post_id = args.get("post_id")
+    user_id = args.get("user_id")
+    try:
+        post_obj = Posts.objects.get(id=int(post_id))
+    except:
         return HttpResponse(
-            json.dumps({"response": "bad request"}),
+            json.dumps({"error": "post doesn't exists"}),
             content_type="application/json"
         )
-
+    try:
+        user_obj = User.objects.get(id=int(user_id))
+    except:
+        return HttpResponse(
+            json.dumps({"error": "user doesn't exists"}),
+            content_type="application/json"
+        )
+    already_liked = post_obj.upvote.filter(
+        liked_by__id=user_obj.id
+    )
+    if not already_liked:
+        like_obj, created = Votes.objects.create()
+        like_obj.liked_by = user_obj
+        like_obj.save()
+        post_obj.upvote.add(like_obj)
+        return HttpResponse(
+            json.dumps({"msg": "Success"}),
+            content_type="application/json"
+        )
+    else:
+        return HttpResponse(
+            json.dumps({"msg": "already liked"}),
+            content_type="application/json"
+        )
 
 def upload_post_image(request):
     try:
