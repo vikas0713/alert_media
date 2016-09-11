@@ -7,7 +7,6 @@ from __future__ import unicode_literals
 import json
 
 # django imports
-from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
@@ -28,7 +27,6 @@ from users.models import Profile
 def frontend_api(request):
     params = request.body
     args = json.loads(params)
-
     latitude = args.get("latitude", None)
     longitude = args.get("longitude", None)
     user_id = args.get("user_id", None)
@@ -60,7 +58,7 @@ def add_post(request):
     image_url = args.get("image_url",None)
 
     try:
-        user = User.objects.get(id = user_id)
+        user = Profile.objects.get(id = user_id)
     except:
         return HttpResponse(
             json.dumps({"error": "user doesn't exist"}),
@@ -109,10 +107,9 @@ def upvote_post(request):
             content_type="application/json"
         )
     try:
-        user_obj = User.objects.get(id=int(user_id))
-    except Exception as ex:
-        print ex
-        print "+++++++++++++"
+
+        user_obj = Profile.objects.get(id=int(user_id))
+    except:
         return HttpResponse(
             json.dumps({"error": "user doesn't exists"}),
             content_type="application/json"

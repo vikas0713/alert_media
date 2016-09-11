@@ -106,8 +106,3 @@ def save_img(requested_file):
     )
     response_data = uploader.upload(requested_file)
     return response_data
-
-
-def profile_picture_upload(filename):
-
-    return response_data["url"]
