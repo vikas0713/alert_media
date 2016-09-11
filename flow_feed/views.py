@@ -134,13 +134,11 @@ def upload_post_image(request):
     try:
         # session_id = request.POST["session_id"]
         # upload avatar image
-        print request
-        print "=========================="
-        post_image = request.FILES.getlist("post_image", None)
+        post_image = request.FILES.getlist("photo", None)
         avatar_file_name = smart_text((post_image[0].name).replace(" ", "_"))
-        path = default_storage.save('images/exercise/' + avatar_file_name, ContentFile(post_image[0].read()))
+        path = default_storage.save('images/' + avatar_file_name, ContentFile(post_image[0].read()))
         import os
-        path = os.path.join(MEDIA_ROOT, path)
+        path = request.META['HTTP_HOST']+path
         # size = 500, 500
         # image = Image.open(path)
         # if hasattr(image, '_getexif'):  # only present in JPEGs
