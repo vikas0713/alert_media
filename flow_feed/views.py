@@ -84,7 +84,7 @@ def add_post(request):
         print path
         # twitter_call
         if post_tweet(description, path):
-            if postMessage(description, path)
+            if postMessage(description, path):
                 return HttpResponse(
                     json.dumps({"msg": "success","status":"200"}),
                     content_type="application/json"
