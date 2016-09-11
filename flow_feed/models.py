@@ -17,7 +17,7 @@ class Votes(models.Model):
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.liked_by
+        return self.liked_by.username
 
 
 class Posts(models.Model):
