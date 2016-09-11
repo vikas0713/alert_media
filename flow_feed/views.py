@@ -27,8 +27,7 @@ from users.models import Profile
 
 def frontend_api(request):
     params = request.body
-    try:
-        args = json.loads(params)
+    args = json.loads(params)
 
     latitude = args.get("latitude", None)
     longitude = args.get("longitude", None)
@@ -99,9 +98,9 @@ def add_post(request):
 
 def upvote_post(request):
     params = request.body
-    args = json.dumps(params)
-    post_id = args.get("post_id")
-    user_id = args.get("user_id")
+    args = json.loads(params)
+    post_id = args.get("post_id",None)
+    user_id = args.get("user_id",None)
     try:
         post_obj = Posts.objects.get(id=int(post_id))
     except:
@@ -111,7 +110,9 @@ def upvote_post(request):
         )
     try:
         user_obj = User.objects.get(id=int(user_id))
-    except:
+    except Exception as ex:
+        print ex
+        print "+++++++++++++"
         return HttpResponse(
             json.dumps({"error": "user doesn't exists"}),
             content_type="application/json"
@@ -120,7 +121,7 @@ def upvote_post(request):
         liked_by__id=user_obj.id
     )
     if not already_liked:
-        like_obj, created = Votes.objects.create()
+        like_obj = Votes.objects.create()
         like_obj.liked_by = user_obj
         like_obj.save()
         post_obj.upvote.add(like_obj)
@@ -130,7 +131,7 @@ def upvote_post(request):
         )
     else:
         return HttpResponse(
-            json.dumps({"msg": "already liked"}),
+            json.dumps({"msg": "Already UpVoted !!","status":"201"}),
             content_type="application/json"
         )
 
