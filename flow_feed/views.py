@@ -50,7 +50,6 @@ def frontend_api(request):
 def add_post(request):
     params = request.body
     args = json.loads(params)
-
     description = args.get("description",None)
     latitude = args.get("latitude",None)
     longitude = args.get("longitude",None)

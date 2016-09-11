@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # custom apps
     'flow_feed',
     'users',
+
 ]
 
 MIDDLEWARE_CLASSES = [
