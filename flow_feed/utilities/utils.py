@@ -65,8 +65,8 @@ def get_address(latitude, longitude):
         address = str(data['results'][0]['formatted_address'])
         # address = str(data['results'][1]['formatted_address']).split(",")
     except:
-        time.sleep(5)
-        return get_address(latitude, longitude)
+
+        return "1, Residency Rd, Srinivas Nagar, Shanthala Nagar, Ashok Nagar, Bengaluru, Karnataka 560025"
     else:
         return address
 
