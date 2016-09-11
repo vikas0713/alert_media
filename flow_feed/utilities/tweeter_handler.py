@@ -20,14 +20,19 @@ def main(messageToMain, photoPath):
 
     api = get_api(cfg)
     # Yes, tweet is called 'status' rather confusing
-    if not photoPath:
-        tweet = messageToMain  # "Hello, world!"
-        status = api.update_status(status=tweet)
-    else:
-        tweet = messageToMain
-        photoLoc = os.path.abspath(photoPath)
-        # UpdateStatus of twitter called with the image file
-        api.update_with_media(photoLoc, status=tweet)
+    try:
+        if not photoPath:
+            tweet = messageToMain  # "Hello, world!"
+            status = api.update_status(status=tweet)
+        else:
+            tweet = messageToMain
+            photoLoc = photoPath
+            # UpdateStatus of twitter called with the image file
+            api.update_with_media(photoLoc, status=tweet)
+    except Exception as ex:
+        print ex
+        print "===============TWEET================"
+
 
 
 def post_tweet(writeMessage, photoLoc):
