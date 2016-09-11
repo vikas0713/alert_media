@@ -138,7 +138,7 @@ def upload_post_image(request):
         avatar_file_name = smart_text((post_image[0].name).replace(" ", "_"))
         path = default_storage.save('images/' + avatar_file_name, ContentFile(post_image[0].read()))
         import os
-        path = request.META['HTTP_HOST']+path
+        path = request.META['HTTP_HOST']+"/site_media/media/"+path
         # size = 500, 500
         # image = Image.open(path)
         # if hasattr(image, '_getexif'):  # only present in JPEGs

@@ -20,3 +20,10 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include("flow_feed.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+    (r'^%s(?P<path>.*)$' % settings.MEDIA_URL[1:],
+    'django.views.static.serve',
+    {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+)
