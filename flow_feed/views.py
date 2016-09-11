@@ -29,7 +29,6 @@ def frontend_api(request):
     params = request.body
     args = json.loads(params)
 
-    response_data = []
     latitude = args.get("latitude", None)
     longitude = args.get("longitude", None)
     user_id = args.get("user_id", None)
@@ -50,55 +49,51 @@ def frontend_api(request):
 
 
 def add_post(request):
-    if request.POST:
-        try:
-            description = request.POST["description"]
-            latitude = request.POST["latitude"]
-            longitude = request.POST["longitude"]
-            tags = request.POST["tags"]
-            user_id = request.POST["user_id"]
-            image_url = request.POST["image_url"]
-        except :
-            return HttpResponse(
-                json.dumps({"error": "request parameters are not correct"}),
-                content_type="application/json"
-            )
-        try:
-            user = User.objects.get(id = user_id)
-        except:
-            return HttpResponse(
-                json.dumps({"error": "user doesn't exist"}),
-                content_type="application/json"
-            )
-        print "working++++++++++++++++++++++++++++++++++++"
+    params = request.body
+    args = json.loads(params)
 
-        address = get_address(latitude, longitude)
-        post_obj, created = Posts.objects.get_or_create(
-            description=description,
-            latitude=latitude,
-            longitude=longitude,
-            tags=tags,
-            address=address,
-            user = user,
-            image_url = image_url
+    description = args.get("description",None)
+    latitude = args.get("latitude",None)
+    longitude = args.get("longitude",None)
+    tags = args.get("category",None)
+    user_id = args.get("user_id",None)
+    image_url = args.get("image_url",None)
+
+    try:
+        user = User.objects.get(id = user_id)
+    except:
+        return HttpResponse(
+            json.dumps({"error": "user doesn't exist"}),
+            content_type="application/json"
         )
-        if created:
-            # twitter_call
-            if post_tweet(description, image_url):
-                return HttpResponse(
-                    json.dumps({"msg": "success"}),
-                    content_type="application/json"
-                )
-            else:
-                return HttpResponse(
-                    json.dumps({"error": "error while tweeting"}),
-                    content_type="application/json"
-                )
+
+    address = get_address(latitude, longitude)
+    post_obj, created = Posts.objects.get_or_create(
+        description=description,
+        latitude=latitude,
+        longitude=longitude,
+        tags=tags,
+        address=address,
+        user = user,
+        image_url = image_url
+    )
+    if created:
+        # twitter_call
+        if post_tweet(description, image_url):
+            return HttpResponse(
+                json.dumps({"msg": "success"}),
+                content_type="application/json"
+            )
         else:
             return HttpResponse(
-                json.dumps({"msg": "request already registered"}),
+                json.dumps({"error": "error while tweeting"}),
                 content_type="application/json"
             )
+    else:
+        return HttpResponse(
+            json.dumps({"msg": "request already registered"}),
+            content_type="application/json"
+        )
 
 
 def upvote_post(request):
@@ -153,6 +148,8 @@ def upload_post_image(request):
     try:
         # session_id = request.POST["session_id"]
         # upload avatar image
+        print request
+        print "=========================="
         post_image = request.FILES.getlist("post_image", None)
         avatar_file_name = smart_text((post_image[0].name).replace(" ", "_"))
         path = default_storage.save('images/exercise/' + avatar_file_name, ContentFile(post_image[0].read()))
@@ -194,14 +191,16 @@ def upload_post_image(request):
 
 
 def login(request):
-    phone_no = request.POST.get("phone_no", None)
+    params = request.body
+    args = json.loads(params)
+    phone_no = args.get("mobile_number", None)
     if phone_no:
         obj, created = Profile.objects.get_or_create(
             contact= str(phone_no),
             username= str(phone_no)
         )
         return HttpResponse(
-            json.dumps({"user_id": obj.id, "contact_num": phone_no})
+            json.dumps({"user_id": obj.id, "mobile_number": phone_no})
         )
 
 

@@ -19,8 +19,8 @@ from flow_feed.views import frontend_api, upload_post_image, upvote_post, add_po
 
 urlpatterns = [
     url(r'^$', frontend_api),
-    url(r'^upload/$', upload_post_image),
-    url(r'^upvote/$', upvote_post),
-    url(r'^add/$', add_post),
-    url(r'^login/$', login),
+    url(r'^upload_image$', upload_post_image),
+    url(r'^upvote$', upvote_post),
+    url(r'^add$', add_post),
+    url(r'^login$', login),
 ]
