@@ -82,7 +82,7 @@ def add_post(request):
         path = MEDIA_ROOT + "/images/"+file_name
         print path
         # twitter_call
-        if post_tweet(description, image_url):
+        if post_tweet(description, path):
             return HttpResponse(
                 json.dumps({"msg": "success","status":"200"}),
                 content_type="application/json"
