@@ -61,7 +61,7 @@ def add_post(request):
         user = Profile.objects.get(id = user_id)
     except:
         return HttpResponse(
-            json.dumps({"error": "user doesn't exist"}),
+            json.dumps({"msg": "user doesn't exist","status":"500"}),
             content_type="application/json"
         )
 
@@ -75,21 +75,26 @@ def add_post(request):
         user = user,
         image_url = image_url
     )
+    print created
+    print "+=========post created============="
     if created:
+        file_name = image_url.split("/")[-1]
+        path = MEDIA_ROOT + "/images/"+file_name
+        print path
         # twitter_call
-        if post_tweet(description, image_url):
+        if post_tweet(description, path):
             return HttpResponse(
-                json.dumps({"msg": "success"}),
+                json.dumps({"msg": "success","status":"200"}),
                 content_type="application/json"
             )
         else:
             return HttpResponse(
-                json.dumps({"error": "error while tweeting"}),
+                json.dumps({"msg": "error while tweeting","status":"500"}),
                 content_type="application/json"
             )
     else:
         return HttpResponse(
-            json.dumps({"msg": "request already registered"}),
+            json.dumps({"msg": "request already registered","status":"200"}),
             content_type="application/json"
         )
 
@@ -134,13 +139,10 @@ def upload_post_image(request):
     try:
         # session_id = request.POST["session_id"]
         # upload avatar image
-        print request
-        print "=========================="
-        post_image = request.FILES.getlist("post_image", None)
+        post_image = request.FILES.getlist("photo", None)
         avatar_file_name = smart_text((post_image[0].name).replace(" ", "_"))
-        path = default_storage.save('images/exercise/' + avatar_file_name, ContentFile(post_image[0].read()))
-        import os
-        path = os.path.join(MEDIA_ROOT, path)
+        path = default_storage.save('images/' + avatar_file_name, ContentFile(post_image[0].read()))
+        path = "http://"+request.META['HTTP_HOST']+"/site_media/media/"+path
         # size = 500, 500
         # image = Image.open(path)
         # if hasattr(image, '_getexif'):  # only present in JPEGs
@@ -168,6 +170,7 @@ def upload_post_image(request):
         # user.save()
         response_obj = {}
         response_obj["post_image_url"] = path
+        response_obj["status"] = "200"
         return HttpResponse(content_type="application/json", content=json.dumps(response_obj))
     except Exception as e:
         return HttpResponse(

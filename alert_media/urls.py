@@ -15,8 +15,19 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django import views as django_views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf import settings
+admin.autodiscover()
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include("flow_feed.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+                            url(r'^%s(?P<path>.*)$' % settings.MEDIA_URL[1:],
+                             django_views.static.serve,
+                             {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}), ]
+    urlpatterns += staticfiles_urlpatterns()
