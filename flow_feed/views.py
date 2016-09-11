@@ -166,6 +166,7 @@ def upload_post_image(request):
         # user.save()
         response_obj = {}
         response_obj["post_image_url"] = path
+        response_obj["status"] = "200"
         return HttpResponse(content_type="application/json", content=json.dumps(response_obj))
     except Exception as e:
         return HttpResponse(
