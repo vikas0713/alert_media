@@ -7,7 +7,6 @@ from __future__ import unicode_literals
 import json
 
 # django imports
-from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
@@ -27,9 +26,7 @@ from users.models import Profile
 
 def frontend_api(request):
     params = request.body
-    try:
-        args = json.loads(params)
-
+    args = json.loads(params)
     latitude = args.get("latitude", None)
     longitude = args.get("longitude", None)
     user_id = args.get("user_id", None)
@@ -61,7 +58,7 @@ def add_post(request):
     image_url = args.get("image_url",None)
 
     try:
-        user = User.objects.get(id = user_id)
+        user = Profile.objects.get(id = user_id)
     except:
         return HttpResponse(
             json.dumps({"error": "user doesn't exist"}),
@@ -99,7 +96,7 @@ def add_post(request):
 
 def upvote_post(request):
     params = request.body
-    args = json.dumps(params)
+    args = json.loads(params)
     post_id = args.get("post_id")
     user_id = args.get("user_id")
     try:
@@ -110,7 +107,7 @@ def upvote_post(request):
             content_type="application/json"
         )
     try:
-        user_obj = User.objects.get(id=int(user_id))
+        user_obj = Profile.objects.get(id=int(user_id))
     except:
         return HttpResponse(
             json.dumps({"error": "user doesn't exists"}),
@@ -120,7 +117,7 @@ def upvote_post(request):
         liked_by__id=user_obj.id
     )
     if not already_liked:
-        like_obj, created = Votes.objects.create()
+        like_obj = Votes.objects.create()
         like_obj.liked_by = user_obj
         like_obj.save()
         post_obj.upvote.add(like_obj)
