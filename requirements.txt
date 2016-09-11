@@ -1,5 +1,6 @@
 cloudinary==1.4.0
 Django==1.9.2
+Facebook==0.0
 gunicorn==19.6.0
 oauthlib==2.0.0
 requests==2.11.1
