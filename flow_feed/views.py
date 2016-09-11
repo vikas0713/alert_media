@@ -103,7 +103,7 @@ def upvote_post(request):
         post_obj = Posts.objects.get(id=int(post_id))
     except:
         return HttpResponse(
-            json.dumps({"error": "post doesn't exists"}),
+            json.dumps({"msg": "post doesn't exists","status":"500"}),
             content_type="application/json"
         )
     try:
@@ -111,19 +111,17 @@ def upvote_post(request):
         user_obj = Profile.objects.get(id=int(user_id))
     except:
         return HttpResponse(
-            json.dumps({"error": "user doesn't exists"}),
+            json.dumps({"msg": "user doesn't exists","status":"500"}),
             content_type="application/json"
         )
-    already_liked = post_obj.upvote.filter(
+    already_liked = post_obj.up_vote.filter(
         liked_by__id=user_obj.id
     )
     if not already_liked:
-        like_obj = Votes.objects.create()
-        like_obj.liked_by = user_obj
-        like_obj.save()
-        post_obj.upvote.add(like_obj)
+        like_obj = Votes.objects.create(liked_by=user_obj)
+        post_obj.up_vote.add(like_obj)
         return HttpResponse(
-            json.dumps({"msg": "Success"}),
+            json.dumps({"msg": "Success","status":"200"}),
             content_type="application/json"
         )
     else:
