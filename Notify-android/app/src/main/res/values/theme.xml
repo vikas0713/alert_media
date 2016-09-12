@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="NotifyTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/NotifyActionBar</item>
+        <item name="actionBarStyle">@style/NotifyActionBar</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="NotifyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/blue</item>
+        <item name="background">@color/blue</item>
+        <item name="homeAsUpIndicator">@drawable/back_icon</item>
+    </style>
+
+    <style name="CustomDigitsTheme" parent="NotifyTheme">
+        <item name="android:textColorPrimary">@color/blue</item>
+        <item name="android:textColorSecondary">@color/blue</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:textColorLink">#ff398622</item>
+        <item name="colorAccent">@color/blue</item>
+    </style>
+
+    <!-- TODO:Style this  -->
+    <style name="NotifyAlertDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+</resources>
