@@ -25,20 +25,3 @@ def main(messageToMain,photoPath):
 
 def postMessage(writeMessage,photoLoc):
     return main(writeMessage,photoLoc)
-
-# ## Below is an example to send photo
-# msgString = "Bob is exquisitely demanding. But it is with him that I learned this essential truth: Nothing is impossible.\n \
-# And this: Because nothing is impossible, you have to dream big dreams; the bigger, the better.\n \
-# So many people along the way, whatever it is you aspire to do, will tell you it can’t be done. But all it takes is imagination.\n \
-# You dream. You plan. You reach.\n \
-# There will be obstacles. There will be doubters. There will be mistakes.\n \
-# But with hard work, with belief, with confidence and trust in yourself and those around you, there are no limits.\n \
-# Perseverance, determination, commitment, and courage – those things are real. The desire for redemption drives you. And the will to succeed – it’s everything. That’s why, on the pool deck in Beijing in the summer of 2008, there were sometimes no words, only screams.\n \n\
-# Because, believe it, dreams really can come true.\n \n\
-# –  Micheal Phelps\n "
-
-# pic = "/home/sashank/Documents/Daily_Activites/2016_08_August/2016_08_11/clipart/michael-phelps-rio-olympics-gold-medal.jpg"
-#pic = "/home/sashank/Documents/Daily_Activites/2016_08_August/2016_08_11/clipart/samudra-mandhan.jpg"
-# postMessage(msgString,pic)
-
-## Facebook URL:: https://www.facebook.com/Alertmedia123-1792180177720250

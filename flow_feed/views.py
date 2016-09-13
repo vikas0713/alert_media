@@ -16,6 +16,7 @@ from django.utils.encoding import smart_text
 from alert_media.settings import MEDIA_ROOT
 from flow_feed.models import Posts, Votes
 # from flow_feed.utilities.facebook_handler import postMessage
+from flow_feed.utilities.facebook_handler import postMessage
 from flow_feed.utilities.tweeter_handler import post_tweet
 from flow_feed.utilities.utils import get_posts_by_upvotes, get_posts_by_location, get_posts_by_profile, save_img, \
     get_address
@@ -83,21 +84,21 @@ def add_post(request):
         print path
         # twitter_call
         if post_tweet(description, path):
-            # if postMessage(description, path):
-            #     return HttpResponse(
-            #         json.dumps({"msg": "success","status":"200"}),
-            #         content_type="application/json"
-            #     )
-            # else:
-            #     return HttpResponse(
-            #         json.dumps({"msg": "error with facebook","status":"500"}),
-            #         content_type="application/json"
-            #     )
+            if postMessage(description, path):
+                return HttpResponse(
+                    json.dumps({"msg": "success","status":"200"}),
+                    content_type="application/json"
+                )
+            else:
+                return HttpResponse(
+                    json.dumps({"msg": "error with facebook","status":"500"}),
+                    content_type="application/json"
+                )
 
-            return HttpResponse(
-                json.dumps({"msg": "success","status":"200"}),
-                content_type="application/json"
-            )
+            # return HttpResponse(
+            #     json.dumps({"msg": "success","status":"200"}),
+            #     content_type="application/json"
+            # )
         else:
             return HttpResponse(
                 json.dumps({"msg": "error while tweeting","status":"500"}),

@@ -84,7 +84,7 @@ def min_max_lat_long(lat, lng, distance):
 def get_posts_by_profile(user):
     posts = []
     all_user_posts = Posts.objects.filter(
-        user=user
+        user__id=user.id
     )
     for post in all_user_posts:
         post_obj = {
